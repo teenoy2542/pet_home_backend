@@ -9,7 +9,7 @@ class PetUser(AbstractUser):
     # photo = models.ImageField()    
 
 class Pet(models.Model):
-    pet_id = models.IntegerField(blank=True,null=True)    
+    pet_id = models.AutoField(blank=True, primary_key=True)
     owner_username = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -24,7 +24,7 @@ class Pet(models.Model):
     district = models.CharField(max_length=100,)   
 
 class PetPhoto(models.Model):
-    pet_photo_id = models.IntegerField(blank=True,null=True)
+    pet_photo_id = models.AutoField(blank=True, primary_key=True)
     pet_id = models.ForeignKey(Pet,on_delete=models.CASCADE)
     # pet_photo = models.ImageField()
 
@@ -36,7 +36,7 @@ class Interested(models.Model):
     ) 
 
 class Message(models.Model):
-    messsage_id = models.IntegerField(blank=True,null=True)
+    messsage_id = models.AutoField(blank=True, primary_key=True)
     pet_id = models.ForeignKey(Pet,on_delete=models.CASCADE)
     username = models.ForeignKey(
         settings.AUTH_USER_MODEL,
