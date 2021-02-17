@@ -2,10 +2,11 @@
 *.log
 *.pot
 *.pyc
-__pycache__
 db.sqlite3
 media
 .idea
+animal_home_api/__pycache__
+animal_home_api/migrations
 
 # Backup files #
 *.bak
