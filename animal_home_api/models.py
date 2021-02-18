@@ -4,10 +4,10 @@ from django.conf import settings
 
 
 class PetUser(AbstractUser):
-    phone = models.IntegerField(blank=True, null=True)
+    phone_number = models.IntegerField(blank=True, null=True)
     address = models.CharField(max_length=200, )
     types = models.CharField(max_length=50, )
-    photo = models.ImageField(blank=True, null=True)
+    photo_user = models.ImageField(blank=True, null=True)
 
 
 class Pet(models.Model):
