@@ -5,7 +5,26 @@ from .models import PetUser, Pet, PetPhoto, Interested, Message, PetAddress
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = PetUser
-        fields = ('id', 'username', 'password', 'first_name', 'last_name', 'phone', 'address', 'photo')
+        fields = ('id', 'username', 'password', 'first_name', 'last_name', 'phone_number', 'address', 'photo_user')
+
+
+class RegisterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PetUser
+        fields = ('id', 'username', 'password', 'first_name', 'last_name', 'phone_number', 'address', 'photo_user')
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        user = PetUser.objects.create_user(
+            validated_data['username'], 
+            validated_data['password'],
+            first_name = validated_data['first_name'],
+            last_name = validated_data['last_name'],
+            phone_number = validated_data['phone_number'],
+            address = validated_data['address'],
+            photo_user = validated_data['photo_user']
+             )
+        return user
 
 
 class PetSerializer(serializers.ModelSerializer):

@@ -4,10 +4,14 @@ from django.conf import settings
 
 
 class PetUser(AbstractUser):
+    USER_TYPE = (
+        ('ow','owner'),
+        ('fi','finder'),
+        )
     phone_number = models.IntegerField(blank=True, null=True)
     address = models.CharField(max_length=200, )
-    types = models.CharField(max_length=50, )
-    photo_user = models.ImageField(blank=True, null=True)
+    user_type = models.CharField(max_length=50,choices=USER_TYPE)
+    photo_user = models.ImageField(upload_to='images/user/', null=True)
 
 
 class Pet(models.Model):
@@ -33,7 +37,7 @@ class PetAddress(models.Model):
 class PetPhoto(models.Model):
     pet_photo_id = models.AutoField(blank=True, primary_key=True)
     pet_id = models.ForeignKey(Pet, on_delete=models.CASCADE)
-    pet_photo = models.ImageField(blank=True, null=True)
+    pet_photo = models.ImageField(upload_to='images/pets/', null=True)
 
 
 class Interested(models.Model):

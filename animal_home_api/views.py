@@ -1,12 +1,22 @@
-from rest_framework import generics
+from rest_framework import generics, permissions, serializers
+from knox.models import AuthToken
+from rest_framework.response import Response
 
 from .models import PetUser, Pet, PetPhoto, Interested, Message
-from .serializers import UserSerializer, PetSerializer, PetPhotoSerializer, InterestedSerializer, MessageSerializer
+from .serializers import UserSerializer, PetSerializer, PetPhotoSerializer, InterestedSerializer, MessageSerializer, RegisterSerializer
 
 
-class UserCreate(generics.CreateAPIView):
-    queryset = PetUser.objects.all()
-    serializer_class = UserSerializer
+class RegisterAPI(generics.GenericAPIView):    
+    serializer_class = RegisterSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        return Response({
+            "user": UserSerializer(user, context=self.get_serializer_context()).data,
+            "token": AuthToken.objects.create(user)[1]
+        }) 
 
 
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
