@@ -9,7 +9,7 @@ from django.contrib.auth import login
 
 
 from .models import PetUser, Pet, PetPhoto, Interested, Message
-from .serializers import UserSerializer, PetSerializer, PetPhotoSerializer, InterestedSerializer, MessageSerializer, RegisterSerializer
+from .serializers import LoginSerializer, UserSerializer, PetSerializer, PetPhotoSerializer, InterestedSerializer, MessageSerializer, RegisterSerializer
 
 
 class RegisterAPI(generics.GenericAPIView):    
@@ -25,16 +25,17 @@ class RegisterAPI(generics.GenericAPIView):
         })
 
 
-class LoginAPI(KnoxLoginView):
-    permission_classes = (permissions.AllowAny,)
+class LoginAPIView(generics.GenericAPIView):
+    serializer_class = LoginSerializer
 
-    def post(self, request, format=None):
-        serializer = AuthTokenSerializer(data=request.data)
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)        
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        login(request, user)
-        return super(LoginAPI, self).post(request, format=None)
-
+        user = serializer.validated_data       
+        return Response({
+            "user": UserSerializer(user, context=self.get_serializer_context()).data,
+            "token": AuthToken.objects.create(user)[1]
+        })
 
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = PetUser.objects.all()

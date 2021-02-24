@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import PetUser, Pet, PetPhoto, Interested, Message, PetAddress
-
+from django.contrib.auth import authenticate
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,8 +16,8 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = PetUser.objects.create_user(
-            validated_data['username'], 
-            validated_data['password'],
+            username = validated_data['username'], 
+            password = validated_data['password'],
             first_name = validated_data['first_name'],
             last_name = validated_data['last_name'],
             phone_number = validated_data['phone_number'],
@@ -25,6 +25,17 @@ class RegisterSerializer(serializers.ModelSerializer):
             photo_user = validated_data['photo_user']
              )
         return user
+
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
+
+    def validate(self, data):
+        user = authenticate(**data)       
+        if user and user.is_active:
+            return user
+        raise serializers.ValidationError("Incorrect Credentials")
 
 
 class PetSerializer(serializers.ModelSerializer):

@@ -3,7 +3,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from knox import views as knox_views
 
-from animal_home_api.views import PetView, PetDetailView, UserDetailView, RegisterAPI, LoginAPI
+from animal_home_api.views import LoginAPIView, PetView, PetDetailView, UserDetailView, RegisterAPI
 
 
 urlpatterns = [
@@ -11,7 +11,7 @@ urlpatterns = [
     path('api/user/<int:id>', UserDetailView.as_view()),
     path('api/pet', PetView.as_view()),
     path('api/pet/<int:pet_id>', PetDetailView.as_view()),
-    path('api/user/login', LoginAPI.as_view(), name='login')
+    path('api/user/login', LoginAPIView.as_view(), name='login')
 ]
 
 if settings.DEBUG:
